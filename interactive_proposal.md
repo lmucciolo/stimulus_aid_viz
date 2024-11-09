@@ -15,12 +15,17 @@ For this project, I aim to reimagine the visualizations in the NYT article, as w
 The data I produced in 2021 for the NYT was graciously provided to me by my previous employer. It is two excel spreadsheets with different tabs/tables for the different types of households and number of children. They have requested I do not publish the raw data as it goes into more detail than the typical estimates they publicly release [(see example here)](https://taxpolicycenter.org/model-estimates/american-rescue-plan-act-2021-final-version-passed-senate-and-house-march-2021/t21-0).
 
 ### Guiding Examples
-2-3 examples of the kinds of interactive visualization you are considering. Refer to the notes from Week 4 for examples, and/or look for unique interactives that you can imagine telling a story about your chosen data. For each of your examples include: a URL short description of how you're currently thinking about approaching your data with ideas from the visualization you've linked make it clear if you think that your approach fits best with Options A/B/C from above.
+
+* https://www.nytimes.com/interactive/2018/08/30/climate/how-much-hotter-is-your-hometown.html
+
+* https://www.nytimes.com/interactive/2024/upshot/buy-rent-calculator.html
 
 ### Mock-up Image
 
+
 ### Questions
 1. What is the best way to go about keeping the data private?
+2. Given that the ARP was enacted over three years ago, should I try to supplement my project with more current information on its effects? 
 
 
 
