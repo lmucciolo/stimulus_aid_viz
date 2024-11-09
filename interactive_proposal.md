@@ -12,7 +12,7 @@ When the ARP was proposed, I was working in Washington DC at the Urban-Brookings
 For this project, I aim to reimagine the visualizations in the NYT article, as well as add an interactive component. While the ARP was signed years ago, and the effects of the pandemic have diminished, I hope to use this exercise as a way to rethink how to display tax data in a way that viewers can actively engage with. 
 
 ### Data Sources
-The data I produced in 2021 for the NYT was graciously provided to me by my previous employer. It is two excel spreadsheets with different tabs/tables for the different types of households and number of children. They have requested I do not publish the raw data as it goes into more detail than the typical estimates they publicly release [(see example here)](https://taxpolicycenter.org/model-estimates/american-rescue-plan-act-2021-final-version-passed-senate-and-house-march-2021/t21-0).
+The data I produced in 2021 for the NYT was graciously provided to me by my previous employer. It comprises two excel spreadsheets with different tabs/tables for the different types of households and number of children. They have requested I do not publish the raw data as it goes into more detail than the typical estimates they publicly release [(see example here)](https://taxpolicycenter.org/model-estimates/american-rescue-plan-act-2021-final-version-passed-senate-and-house-march-2021/t21-0).
 
 ### Guiding Examples
 
