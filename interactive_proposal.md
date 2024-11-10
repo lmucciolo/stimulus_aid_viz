@@ -16,10 +16,12 @@ The data I produced in 2021 for the NYT was graciously provided to me by my prev
 
 ### Guiding Examples
 
-* https://www.nytimes.com/interactive/2018/08/30/climate/how-much-hotter-is-your-hometown.html
+* [How Much Hotter is your Hometown?](https://www.nytimes.com/interactive/2018/08/30/climate/how-much-hotter-is-your-hometown.html):
+I like this visualization both because the visualization is tailored to the reader's personalized input, and because it shows the greater scope of an issue using the reader's input as a comparison. For my own project I'd like to use the search/drop-down bars to potentially allow readers to choose their income level or household type/number of children and then have a chart or figure autopopulate how much money they would receive from the stimulus bill. I think it would be interesting to add a figure that shows them compared to other households and where they fall in the range of average stimulus amounts (something close to the static visualization the original NYT article provides). I think this example would best fit as Option A (core interative).
 
-* https://www.nytimes.com/interactive/2024/upshot/buy-rent-calculator.html
-
+* [Is It Better to Rent or Buy? A Financial Calculator](https://www.nytimes.com/interactive/2024/upshot/buy-rent-calculator.html):
+Similar to the example above, I like how this one requires the reader to actively input information and then in real-time provides interactive output. I think this a good example of having multiple input variables. For my own data I would have household type, number of children, and household income as key inputs, so I would definitely require a way to gather all three values seamlessly. I like how in the example they used a sliding scale. The output is also a numerical value which is similar to what I would like to include in my visualization (i.e, average size of stimulus aid). I think this approach includes a mixture of interactive techniques, and would best fit as Option C (custom option).
+  
 ### Mock-up Image
 
 
