@@ -3,15 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
     <style>
       .fixed-right {
         position: fixed;
-        top: 0;
+        top: 100px;
         right: 0;
         width: 40%;
-        height: 60%;
+        height: 50%;
         overflow-y: auto; /* Add scroll if content overflows */
         padding: 20px;
         padding-top: 20px; 
@@ -24,12 +23,13 @@
         padding-left: 20px; 
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   </head>
   <body>
   <section class="main-content">
     <div class="container">
       <h1 class="title">
-        How much money can I expect from the stimulus bill?
+        How Will the Stimulus Bill Impact Me?
       </h1>
       <br>
       <p class="subtitle">
@@ -69,58 +69,96 @@
             </div>  
       </div>
       <br>
-      <div class="field is-grouped">
-        <div id="filing_status">
-        <label class="label">What is your filing status?</label>
-        <button class="button is-light">Single</button>
-        <button class="button is-light">Head of Household</button>
-        <button class="button is-light">Married Filing Separately</button>
-        <button class="button is-light">Married Filing Jointly</button>
-        </div>
-      </div>
-      <br>
-        <div class="field is-grouped">
-            <div id="children">
-                <label class="label">How many children or dependents do you have?</label>
-                <button class="button is-light">None</button>
-                <button class="button is-light">One</button>
-                <button class="button is-light">Two</button>
-                <button class="button is-light">Three or more</button>
+      <label class="label">What is your filing status?</label>
+      <div class="field has-addons" id="filing_status">
+        <div class="control">
+            <div class="select">
+                <div class="select is-fullwidth">
+                <select name="filing status">
+                    <option value="Select one">Select one</option>
+                    <option value="Single">Single</option>
+                    <option value="Head of Household">Head of Household</option>
+                    <option value="Married Filing Separately">Married Filing Separately</option>
+                    <option value="Married Filing Jointly">Married Filing Jointly</option>
+                </select>
+                </div>
             </div>
         </div>
+        <div class="control">
+                <button type="submit" class="button is-primary">Choose</button>
+            </div>
+        </div>
+      <br>
+      <label class="label">How many children or dependents do you have?</label>
+      <div class="field has-addons" id="filing_status">
+        <div class="control">
+            <div class="select">
+                <div class="select is-fullwidth">
+                <select name="filing status">
+                    <option value="Select one">Select one</option>
+                    <option value="Single">0</option>
+                    <option value="Head of Household">1</option>
+                    <option value="Married Filing Separately">2</option>
+                    <option value="Married Filing Jointly">3 or more</option>
+                </select>
+                </div>
+            </div>
+        </div>
+        <div class="control">
+                <button type="submit" class="button is-primary">Choose</button>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <h1 class="title">
+            How Will I Fare Compared to Other Households?
+        </h1>
+        <p class="block">
+            Your household group is highlighted in the figure below. 
+            Toggle over other groups to see their average aid or change in 
+            after-tax income from the stimulus bill. Circles are proportional to
+            the number of households in each income group.
+        </p>
+        <div class="field is-grouped">
+            <div id="plotButton">
+                <button class="button is-light" onclick="showAverageAid()">Average Aid to Households</button>
+                <button class="button is-light" onclick="showPercentChange()">Percent Change in After-Tax Income</button>
+            </div>
+        </div>
+
+          <!-- placeholder for SVG -->
+        <div id="bubblePlot"></div>
     </div>
   </section>
+  <!-- Fixed container on the right -->
   <section class="fixed-right">
     <div class="container">
       <h1 class="title">
-        Your estimated stimulus amount
+        Your Results
       </h1>
-      <br>
       <div class="box">
         <p class="subtitle">
-          Your estimated stimulus amount is:
-        </p>
-        <p class="title">
-          $1,400
-        </p>
+            Your household will see an average aid of <strong>$1,400</strong>
+            from the stimulus bill.
+        </p>  
       </div>
       <br>
       <div class="box">
         <p class="subtitle">
-          Your estimated stimulus amount is:
-        </p>
-        <p class="title">
-          $1,400
-        </p>
+            Households like yours will see a <strong>10%</strong> change in 
+            after-tax income.
+        </p>  
       </div>
       <br>
       <p class="block">
-        This amount is an estimate and is based on the information you provided.
+        These amounts are estimates and are based on the information you provided.
         The actual amount you receive may vary. For more information on the 
         stimulus bill and how it may affect you, please visit the 
         <a href= "https://www.irs.gov/coronavirus/economic-impact-payments">IRS website</a>.
       </p>
-
+    </div>
   </section>
+  <script src="bubbleplot.js"></script>
   </body>
 </html>
