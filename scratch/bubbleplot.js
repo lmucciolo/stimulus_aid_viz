@@ -9,6 +9,51 @@ const scale_hh = d3.scaleLinear([0, 11200], [0, 35]);
 let data = d3.csv("tpc_estimates.csv").then(function(data) {
     console.log(data);
 
+    // Function to update results based on dropdown selections
+    window.updateResults = function() {
+        // Get selected values from dropdowns
+        let income = document.getElementById("incomeSelect").value;
+        let filingStatus = document.getElementById("filingStatusSelect").value;
+        let children = document.getElementById("childrenSelect").value;
+
+        // Filter data based on selections
+        let resultsData = data.filter(d => 
+            d.income_group === income &&
+            d.filing_status === filingStatus &&
+            d.children == children
+        );
+
+        // Update results in the fixed container
+        let avgAid = d3.mean(resultsData, d => -d.avg_tax_change);
+        let formattedAvgAid = d3.format("$,.0f")(avgAid);
+        let percChange = d3.mean(resultsData, d => d.perc_change_after_tax);
+        let formattedPercChange = d3.format(".1f")(percChange) + "%";
+
+        document.getElementById("resultsContainer").innerHTML = `
+          <div class="box">
+            <p class="subtitle">
+              Your household will see an average aid of <strong>${formattedAvgAid}</strong>
+              from the stimulus bill.
+            </p>  
+          </div>
+          <br>
+          <div class="box">
+            <p class="subtitle">
+              Households like yours will see a <strong>${formattedPercChange}</strong> change in 
+              after-tax income.
+            </p>  
+          </div>
+          <br>
+          <p class="block">
+            These amounts are estimates and are based on the information you provided.
+            The actual amount you receive may vary. For more information on the 
+            stimulus bill and how it may affect you, please visit the 
+            <a href="https://www.irs.gov/coronavirus/economic-impact-payments">IRS website</a>.
+          </p>
+        `;
+
+    };
+
     // filter data for filing_status = "m"
     let filteredData = data.filter(d => d.filing_status === "m");
 
@@ -38,11 +83,10 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .attr("viewBox", "-4 -10 300 350");
 
         // add vertical grid lines to the bar chart area
-        plot.selectAll("line.verticalGrid")
+        plot.selectAll("line")
             .data(scale_child.ticks(4))
-            .enter()
-            .append("line")
-            .attr("class", "vertical    Grid")
+            .join("line")
+            .attr("class", "verticalGrid")
             .attr("x1", function(d) {
                 return 38 + scale_child(d);
             })
@@ -57,8 +101,7 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         // create a bubble chart for only filing_status = "m"
         plot.selectAll("circle")
             .data(filteredData)
-            .enter()
-            .append("circle")
+            .join("circle")
             .attr("cx", function(d) {
                 return 38 + scale_child(d.children);
             })
@@ -172,10 +215,10 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
 
         // add vertical grid lines to the bar chart area
         plot.selectAll("line.verticalGrid")
-            .data(scale_child.ticks(4))
             .enter()
-            .append("line")
-            .attr("class", "vertical    Grid")
+            .data(scale_child.ticks(4))
+            .join("line")
+            .attr("class", "verticalGrid")
             .attr("x1", function(d) {
                 return 38 + scale_child(d);
             })
@@ -197,8 +240,7 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         // create a bubble chart for only filing_status = "m"
         plot.selectAll("circle")
             .data(filteredData)
-            .enter()
-            .append("circle")
+            .join("circle")
             .attr("cx", function(d) {
                 return 38 + scale_child(d.children);
             })
