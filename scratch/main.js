@@ -3,11 +3,17 @@ const scale_avg = d3.scaleLinear([0, 16000], [250, 0]);
 const scale_perc = d3.scaleLinear([0, 120], [250, 0]);
 const scale_child = d3.scaleLinear([0, 3], [0, 250]);
 const scale_hh = d3.scaleLinear([0, 11200], [0, 35]);
+let highlightCircle;
 
 // embed data for static version
 // load csv data
 let data = d3.csv("tpc_estimates.csv").then(function(data) {
     console.log(data);
+
+    // create circleID for each circle
+    data.forEach(function(d) {
+        d.cirlceID = d.filing_status + "-" + d.income_group +  "-" + d.children;
+    });
 
     // Function to update results based on dropdown selections
     window.updateResults = function() {
@@ -22,6 +28,12 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             d.filing_status === filingStatus &&
             d.children == children
         );
+
+        highlightCircle = filingStatus + "-" + income + "-" + children;
+
+        // Update the plots with the selected circle highlighted
+        showAverageAid();
+        showPercentChange();
 
         // Update results in the fixed container
         let avgAid = d3.mean(resultsData, d => -d.avg_tax_change);
@@ -102,6 +114,9 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         plot.selectAll("circle")
             .data(filteredData)
             .join("circle")
+            .attr("id", function(d) {
+                return d.cirlceID;
+            })
             .attr("cx", function(d) {
                 return 38 + scale_child(d.children);
             })
@@ -111,9 +126,17 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .attr("r", function(d) {
                 return scale_hh(d.num_hh);
             })
-            .style("fill", "#00d1b2")
+            // highlight the selected circle
+            .style("fill", "#d5d5d5")
             .style("opacity", 0.8)
-            .style("stroke", "#de2f52")
+            .style("stroke", "#3273dc")
+            .style("stroke-width", .9);
+
+        // highlight the selected circle equal to the circleID
+        plot.selectAll("#" + highlightCircle)
+            .style("fill", "#3273dc")
+            .style("opacity", 1)
+            .style("stroke", "#3273dc")
             .style("stroke-width", .9);
 
         // append axes to the SVG
@@ -157,8 +180,8 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             // format the number of households
             let formattedNumHh = d3.format(",.0f")(d.num_hh*1000);
             Tooltip
-                .html("Income Group: " + d.income_group + "<br>" + "Average Aid: " 
-                + formattedAvgTaxChange + "<br>" + "Number of Households: " + formattedNumHh)
+                .html("<strong>Income Group: </strong>" + d.income_group + "<br>" + "<strong>Average Aid: </strong>" 
+                + formattedAvgTaxChange + "<br>" + "<strong>Number of Households: </strong>" + formattedNumHh)
                 // make font smaller
                 .style("font-size", "13px")
                 .style("left", (event.pageX - 200) + "px")
@@ -170,8 +193,8 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             d3.select(this)
                 .style("stroke", "none")
                 .style("opacity", 0.9)
-                // return to pink stroke 
-                .style("stroke", "#de2f52")
+                // return to original stroke 
+                .style("stroke", "#3273dc")
         }
 
         plot.selectAll("circle")
@@ -241,6 +264,9 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         plot.selectAll("circle")
             .data(filteredData)
             .join("circle")
+            .attr("id", function(d) {
+                return d.cirlceID;
+            })
             .attr("cx", function(d) {
                 return 38 + scale_child(d.children);
             })
@@ -250,10 +276,17 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .attr("r", function(d) {
                 return scale_hh(d.num_hh);
             })
-            .style("fill", "#00d1b2")
+            .style("fill", "#d5d5d5")
             .style("opacity", 0.6)
-            .style("stroke", "#de2f52")
+            .style("stroke", "#3273dc")
             .style("stroke-width", 0.9);
+
+        // highlight the selected circle equal to the circleID
+        plot.selectAll("#" + highlightCircle)
+            .style("fill", "#3273dc")
+            .style("opacity", 1)
+            .style("stroke", "#3273dc")
+            .style("stroke-width", .9);
         
         // create a tooltip
         let Tooltip = d3.select("#bubblePlot")
@@ -294,8 +327,8 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             d3.select(this)
                 .style("stroke", "none")
                 .style("opacity", 0.9)
-                // return to pink stroke 
-                .style("stroke", "#de2f52")
+                // return to original stroke 
+                .style("stroke", "#3273dc")
         }
 
         plot.selectAll("circle")

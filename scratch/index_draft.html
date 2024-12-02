@@ -22,6 +22,12 @@
         padding-top: 20px; 
         padding-left: 20px; 
       }
+      .dropdown-width {
+        width: 300px;
+      }
+      hr {
+        border: 1px solid #000; /* make border color to a darker color */
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   </head>
@@ -32,10 +38,15 @@
         How Will the Stimulus Bill Impact Me?
       </h1>
       <!-- add padding -->
-      <p class="subtitle" style="margin-top: 15px;">
+      <p class="subtitle" style="margin-top: 30px;">
         Find out your average stimulus amount with only a few details about
         your household.
       </p>
+      <p class="block">
+        <strong>By: Livia Mucciolo</strong>
+      </p>
+      <!-- add horizontal line to separate bulk of page -->
+      <hr>
       <p class="block">
         By providing the following information about your household, we can
         roughly estimate the amount of money you can expect to
@@ -63,10 +74,7 @@
                 </select>
                 </div>
             </div>
-            </div>
-            <div class="control">
-                <button type="submit" class="button is-primary" onclick="updateResults()">Choose</button>
-            </div>  
+            </div> 
       </div>
       <br>
       <label class="label">What is your filing status?</label>
@@ -74,7 +82,7 @@
         <div class="control">
             <div class="select" required>
                 <div class="select is-fullwidth">
-                <select id="filingStatusSelect" name="filing status">
+                <select id="filingStatusSelect" name="filing status" required>
                     <option value="">Select one</option>
                     <option value="s">Single</option>
                     <option value="s">Head of Household</option>
@@ -84,16 +92,13 @@
                 </div>
             </div>
         </div>
-        <div class="control">
-                <button type="submit" class="button is-primary" onclick="updateResults()">Choose</button>
-            </div>
         </div>
       <br>
       <label class="label">How many children or dependents do you have?</label>
       <div class="field has-addons" id="filing_status">
         <div class="control">
             <div class="select">
-                <div class="select is-fullwidth">
+                <div class="select is-fullwidth dropdown-width">
                 <select id="childrenSelect" name="children" required>
                     <option value="">Select one</option>
                     <option value="0">0</option>
@@ -104,11 +109,11 @@
                 </div>
             </div>
         </div>
-        <div class="control">
-                <button type="submit" class="button is-primary" onclick="updateResults()">Choose</button>
-            </div>
         </div>
         <br>
+        <div class="control">
+          <button type="button" class="button is-primary" onclick="updateResults()">Update Results</button>
+        </div>
         <br>
         <br>
         <h1 class="title">
@@ -148,6 +153,6 @@
       </div>
     </div>
   </section>
-  <script src="bubbleplot.js"></script>
+  <script src="main.js"></script>
   </body>
 </html>
