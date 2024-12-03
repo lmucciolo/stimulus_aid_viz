@@ -10,6 +10,15 @@ let highlightCircle;
 let data = d3.csv("tpc_estimates.csv").then(function(data) {
     console.log(data);
 
+    // change income group '500k+' to '500k'
+    data.forEach(function(d) {
+        if (d.income_group === "500k+") {
+            d.income_group = "500k";
+        }
+        if (d.income_group === "<30k") {
+            d.income_group = "lt30k";
+        }
+    });
     // create circleID for each circle
     data.forEach(function(d) {
         d.cirlceID = d.filing_status + "-" + d.income_group +  "-" + d.children;
@@ -180,8 +189,10 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             // format the number of households
             let formattedNumHh = d3.format(",.0f")(d.num_hh*1000);
             Tooltip
-                .html("<strong>Income Group: </strong>" + d.income_group + "<br>" + "<strong>Average Aid: </strong>" 
-                + formattedAvgTaxChange + "<br>" + "<strong>Number of Households: </strong>" + formattedNumHh)
+                .html("<strong>Income Group: </strong>" + d.income_group + "<br>"
+                     + "<strong>Average Aid: </strong>" 
+                     + formattedAvgTaxChange + "<br>" + "<strong>Number of Households: </strong>" 
+                     + formattedNumHh)
                 // make font smaller
                 .style("font-size", "13px")
                 .style("left", (event.pageX - 200) + "px")
