@@ -1,9 +1,11 @@
-// create scale functions
+// create scale functions and global variables
 const scale_avg = d3.scaleLinear([0, 16000], [250, 0]);
 const scale_perc = d3.scaleLinear([0, 120], [250, 0]);
 const scale_child = d3.scaleLinear([0, 3], [0, 250]);
-const scale_hh = d3.scaleLinear([0, 11200], [0, 35]);
+const scale_hh_s = d3.scaleLinear([19, 36250], [0, 37]);
+const scale_hh_M = d3.scaleLinear([379, 11200], [0, 37]);
 let highlightCircle;
+let maritalStatus;
 
 // embed data for static version
 // load csv data
@@ -24,14 +26,32 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         d.cirlceID = d.filing_status + "-" + d.income_group +  "-" + d.children;
     });
 
-    // Function to update results based on dropdown selections
+    // sort data by num_hh to move smaller circles to the front
+    data.sort((a, b) => b.num_hh - a.num_hh);
+
+    // function to update results based on dropdown selections
     window.updateResults = function() {
-        // Get selected values from dropdowns
+        // get selected values from dropdowns
         let income = document.getElementById("incomeSelect").value;
         let filingStatus = document.getElementById("filingStatusSelect").value;
         let children = document.getElementById("childrenSelect").value;
 
-        // Filter data based on selections
+        // if any of the values are selected show error message
+        if (income === "" || filingStatus === "" || children === "") {
+            document.getElementById("resultsContainer").innerHTML = `
+                <div class="box">
+                    <p class="subtitle">
+                        Please select values for all dropdowns to see results.
+                    </p>
+                </div>
+
+            `;
+            // Clear the plot if any selection is missing
+            d3.select("#bubblePlot").selectAll("*").remove();
+            return; // Exit the function early
+        }
+
+        // filter data based on selections
         let resultsData = data.filter(d => 
             d.income_group === income &&
             d.filing_status === filingStatus &&
@@ -40,11 +60,30 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
 
         highlightCircle = filingStatus + "-" + income + "-" + children;
 
-        // Update the plots with the selected circle highlighted
-        showAverageAid();
-        showPercentChange();
+        // update maritalStatus for filtering data
+        maritalStatus = filingStatus;
 
-        // Update results in the fixed container
+        // update text of showStatusChange button based on selected filing status
+        let statusText = "";
+        switch (filingStatus) {
+            case "s":
+                statusText = "Show Me with Married Filing Status";
+                break;
+            case "m":
+                statusText = "Show Me with Single Filing Status";
+                break;
+            default:
+                statusText = "Show Me with a Different Filing Status";
+        }
+        document.getElementById("statusChangeButton").innerHTML = `
+            <button class="button is-light" onclick="showStatusChange()">${statusText}</button>
+        `;
+
+        // Update the plots with the selected circle highlighted
+        showPercentChange();
+        showAverageAid();
+
+        // update results in the fixed container
         let avgAid = d3.mean(resultsData, d => -d.avg_tax_change);
         let formattedAvgAid = d3.format("$,.0f")(avgAid);
         let percChange = d3.mean(resultsData, d => d.perc_change_after_tax);
@@ -75,16 +114,23 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
 
     };
 
-    // filter data for filing_status = "m"
-    let filteredData = data.filter(d => d.filing_status === "m");
-
-    // sort data by num_hh to move smaller circles to the front
-    filteredData.sort((a, b) => b.num_hh - a.num_hh) ;
+    
 
     // function to show Average Aid to Households plot
     window.showAverageAid = function() {
         // clear existing plot
         d3.select("#bubblePlot").selectAll("*").remove();
+
+        // get selected values from dropdowns
+        let income = document.getElementById("incomeSelect").value;
+        let filingStatus = document.getElementById("filingStatusSelect").value;
+        let children = document.getElementById("childrenSelect").value;
+
+        // check if any selection is missing and clear circles
+        if (income === "" || filingStatus === "" || children === "") {
+            d3.select("#bubblePlot").selectAll("circle").remove();
+            return; // Exit the function early
+        }
 
         // create axes
         let xAxis = d3.axisBottom(scale_child)
@@ -95,13 +141,20 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             });;
         let yAxis = d3.axisLeft(scale_avg).ticks(8).tickFormat(d3.format("$,.0f"));
 
+
+        // filter data for filing_status chosen
+        let filteredData = data.filter(d => d.filing_status === maritalStatus);
+
+        // if maritalStatus is "s" use scale_hh_s, else use scale_hh_M
+        let scale_hh = maritalStatus === "s" ? scale_hh_s : scale_hh_M;
+
         // append the svg object to the body of the page
         let plot = d3
             .select("#bubblePlot")
             .append("svg")
             .attr("width", 820)
-            .attr("height", 800)
-            .attr("viewBox", "-4 -10 300 350");
+            .attr("height", 700)
+            .attr("viewBox", "0 -10 300 315");
 
         // add vertical grid lines to the bar chart area
         plot.selectAll("line")
@@ -119,7 +172,7 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .style("stroke", "#d3d3d3")
             .style("stroke-width", 0.3);
 
-        // create a bubble chart for only filing_status = "m"
+        // create a bubble chart
         plot.selectAll("circle")
             .data(filteredData)
             .join("circle")
@@ -143,10 +196,10 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
 
         // highlight the selected circle equal to the circleID
         plot.selectAll("#" + highlightCircle)
-            .style("fill", "#3273dc")
-            .style("opacity", 1)
-            .style("stroke", "#3273dc")
-            .style("stroke-width", .9);
+                .style("fill", "#3273dc")
+                .style("opacity", 1)
+                .style("stroke", "#3273dc")
+                .style("stroke-width", .9);
 
         // append axes to the SVG
         plot.append("g")
@@ -173,6 +226,16 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .style("border-width", "2px")
             .style("border-radius", "5px")
             .style("padding", "5px")
+
+        // change 500k to 500k+ and lt30k to <30k for tooltip
+        filteredData.forEach(function(d) {
+            if (d.income_group === "500k") {
+                d.income_group = "500k+";
+            }
+            if (d.income_group === "lt30k") {
+                d.income_group = "<30k";
+            }
+        });
 
         // functions that change the tooltip when user hover/move/leave a cell
         let mouseover = function(event, d) {
@@ -219,12 +282,29 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         // clear existing plot
         d3.select("#bubblePlot").selectAll("*").remove();
 
+        // get selected values from dropdowns
+        let income = document.getElementById("incomeSelect").value;
+        let filingStatus = document.getElementById("filingStatusSelect").value;
+        let children = document.getElementById("childrenSelect").value;
+
+        // check if any selection is missing and clear circles
+        if (income === "" || filingStatus === "" || children === "") {
+            d3.select("#bubblePlot").selectAll("circle").remove();
+            return; // Exit the function early
+        }
+
+        // filter data for filing_status chosen
+        let filteredData = data.filter(d => d.filing_status === maritalStatus);
+
+        // if maritalStatus is "s" use scale_hh_s, else use scale_hh_M
+        let scale_hh = maritalStatus === "s" ? scale_hh_s : scale_hh_M;
+
         // append the svg object to the body of the page
         let plot = d3.select("#bubblePlot")
             .append("svg")
             .attr("width", 820)
-            .attr("height", 800)
-            .attr("viewBox", "-4 -10 300 350");
+            .attr("height", 700)
+            .attr("viewBox", "0 -10 300 315");
 
         // create axes
         let xAxis = d3.axisBottom(scale_child)
@@ -271,7 +351,7 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .selectAll("text")
             .style("font-size", "6px");
 
-        // create a bubble chart for only filing_status = "m"
+        // create a bubble chart
         plot.selectAll("circle")
             .data(filteredData)
             .join("circle")
@@ -288,11 +368,11 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
                 return scale_hh(d.num_hh);
             })
             .style("fill", "#d5d5d5")
-            .style("opacity", 0.6)
+            .style("opacity", 0.8)
             .style("stroke", "#3273dc")
             .style("stroke-width", 0.9);
 
-        // highlight the selected circle equal to the circleID
+        // highlight the selected circle equal to the circleID 
         plot.selectAll("#" + highlightCircle)
             .style("fill", "#3273dc")
             .style("opacity", 1)
@@ -309,6 +389,16 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .style("border-width", "2px")
             .style("border-radius", "5px")
             .style("padding", "5px")
+
+        // change 500k to 500k+ and lt30k to <30k for tooltip
+        filteredData.forEach(function(d) {
+            if (d.income_group === "500k") {
+                d.income_group = "500k+";
+            }
+            if (d.income_group === "lt30k") {
+                d.income_group = "<30k";
+            }
+        });
 
         // functions that change the tooltip when user hover/move/leave a cell
         let mouseover = function(event, d) {

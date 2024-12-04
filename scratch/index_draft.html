@@ -15,8 +15,8 @@
       </h1>
       <!-- add padding -->
       <p class="subtitle" style="margin-top: 30px;">
-        Find out your average stimulus amount with only a few details about
-        your household.
+        <i>Find out your average stimulus amount with only a few details about
+          your household.</i>
       </p>
       <p class="block">
         <strong>By: Livia Mucciolo</strong>
@@ -37,7 +37,7 @@
       <label class="label">What is your total household income?</label>
       <div class="field has-addons" id="income">
         <div class="control">
-            <div class="select">
+            <div class="select dropdown-width">
                 <div class="select is-fullwidth">
                 <select id="incomeSelect" name="household income" required>
                     <option value="">Select one</option>
@@ -56,7 +56,7 @@
       <label class="label">What is your filing status?</label>
       <div class="field has-addons" id="filing_status">
         <div class="control">
-            <div class="select" required>
+            <div class="select dropdown-width" required>
                 <div class="select is-fullwidth">
                 <select id="filingStatusSelect" name="filing status" required>
                     <option value="">Select one</option>
@@ -73,8 +73,8 @@
       <label class="label">How many children or dependents do you have?</label>
       <div class="field has-addons" id="filing_status">
         <div class="control">
-            <div class="select">
-                <div class="select is-fullwidth dropdown-width">
+            <div class="select dropdown-width">
+                <div class="select is-fullwidth">
                 <select id="childrenSelect" name="children" required>
                     <option value="">Select one</option>
                     <option value="0">0</option>
@@ -110,6 +110,11 @@
 
           <!-- placeholder for SVG -->
         <div id="bubblePlot"></div>
+        <!--Button to change filing status of plot from default -->
+        <div>
+          <div id="statusChangeButton">
+          </div>
+        </div>
     </div>
   </section>
   <!-- fixed container on the right -->
@@ -123,7 +128,8 @@
         <div class="box">
         <!-- Default content before any buttons are clicked -->
         <p class="subtitle">
-          Please select your household income, filing status, and number of children to see the results.
+          Please select your household income, filing status, and number of 
+          children to see your estimates and resulting figure.
         </p>  
       </div>
       </div>
