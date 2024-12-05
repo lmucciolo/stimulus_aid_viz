@@ -1,9 +1,10 @@
 // create scale functions and global variables
 const scale_avg = d3.scaleLinear([0, 16000], [250, 0]);
-const scale_perc = d3.scaleLinear([0, 120], [250, 0]);
+const scale_perc_m = d3.scaleLinear([0, 120], [250, 0]);
+const scale_perc_s = d3.scaleLinear([0, 100], [250, 0]);
 const scale_child = d3.scaleLinear([0, 3], [0, 250]);
-const scale_hh_s = d3.scaleLinear([19, 36250], [0, 37]);
-const scale_hh_M = d3.scaleLinear([379, 11200], [0, 37]);
+const scale_hh_s = d3.scaleLinear([19, 36250], [3, 35]);
+const scale_hh_M = d3.scaleLinear([379, 11200], [3, 35]);
 let highlightCircle;
 let maritalStatus;
 
@@ -164,8 +165,8 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
                 const labels = ["No child", "One child", "Two children", "Three or more children"];
                 return labels[d]; // Custom format for x-axis labels
             });;
-        let yAxis = d3.axisLeft(scale_avg).ticks(8).tickFormat(d3.format("$,.0f"));
 
+        let yAxis = d3.axisLeft(scale_avg).ticks(8).tickFormat(d3.format("$,.0f"));
 
         // filter data for filing_status chosen
         let filteredData = data.filter(d => d.filing_status === maritalStatus);
@@ -338,18 +339,36 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .ticks(4)
             .tickFormat(function(d) {
                 const labels = ["No child", "One child", "Two children", "Three or more children"];
-                return labels[d]; // Custom format for x-axis labels
+                return labels[d]; 
             });
 
-        let yAxis = d3.axisLeft(scale_perc)
-            .ticks(8)
-            .tickFormat(function(d) {
-                return d + "%"; // Custom format for y-axis labels
-            });
+        let yAxis;
+
+        if (maritalStatus === "s") {
+            yAxis = d3.axisLeft(scale_perc_s)
+                .ticks(8)
+                .tickFormat(function(d) {
+                    return d + "%"; 
+                });
+        } else {
+            yAxis = d3.axisLeft(scale_perc_m)
+                .ticks(8)
+                .tickFormat(function(d) {
+                    return d + "%"; 
+                });
+        }
+
         // append axes to the SVG
         plot.append("g")
             .attr("transform", "translate(38, 280)")
             .call(xAxis)
+            .style("stroke-width", 0.3)
+            .selectAll("text")
+            .style("font-size", "6px");
+
+        plot.append("g")
+            .attr("transform", "translate(0, 0)")
+            .call(yAxis)
             .style("stroke-width", 0.3)
             .selectAll("text")
             .style("font-size", "6px");
@@ -371,13 +390,6 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .style("stroke", "#d3d3d3")
             .style("stroke-width", 0.3);
 
-        plot.append("g")
-            .attr("transform", "translate(0, 0)")
-            .call(yAxis)
-            .style("stroke-width", 0.3)
-            .selectAll("text")
-            .style("font-size", "6px");
-
         // create a bubble chart
         plot.selectAll("circle")
             .data(filteredData)
@@ -389,7 +401,10 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
                 return 38 + scale_child(d.children);
             })
             .attr("cy", function(d) {
-                return scale_perc(d.perc_change_after_tax);
+                if (maritalStatus === "s") {
+                    return scale_perc_s(d.perc_change_after_tax);
+                }
+                return scale_perc_m(d.perc_change_after_tax);
             })
             .attr("r", function(d) {
                 return scale_hh(d.num_hh);
