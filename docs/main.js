@@ -41,7 +41,8 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             document.getElementById("resultsContainer").innerHTML = `
                 <div class="box">
                     <p class="subtitle">
-                        Please select values for all dropdowns to see results.
+                        Insufficient variables selected. Please select a 
+                        value from each of the dropdown selectors.
                     </p>
                 </div>
 
@@ -63,7 +64,7 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
         // update maritalStatus for filtering data
         maritalStatus = filingStatus;
 
-        // update text of showStatusChange button based on selected filing status
+        // update text of statusChangeButton based on selected filing status
         let statusText = "";
         switch (filingStatus) {
             case "s":
@@ -76,7 +77,7 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
                 statusText = "Show Me with a Different Filing Status";
         }
         document.getElementById("statusChangeButton").innerHTML = `
-            <button class="button is-light" onclick="showStatusChange()">${statusText}</button>
+            <button class="button is-light" onclick="toggleFilingStatus()">${statusText}</button>
         `;
 
         // Update the plots with the selected circle highlighted
@@ -114,7 +115,31 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
 
     };
 
-    
+    ///////////////////////////////////////////////////////////////////////////
+
+    // function to toggle filing status and update plots
+    window.toggleFilingStatus = function() {
+        // toggle maritalStatus
+        maritalStatus = maritalStatus === "s" ? "m" : "s";
+
+        // update the text of the showStatusChange button based on the new filing status
+        let statusText = maritalStatus === "s" ? "Show Me with Married Filing Status" : "Show Me with Single Filing Status";
+        document.getElementById("statusChangeButton").innerHTML = `
+        <button class="button is-light" onclick="toggleFilingStatus()">${statusText}</button>
+        `;
+
+        // update highlightCircle based on new filing status
+        let income = document.getElementById("incomeSelect").value;
+        let children = document.getElementById("childrenSelect").value;
+        highlightCircle = maritalStatus + "-" + income + "-" + children;
+
+        // update the plots with the new filing status
+        showPercentChange();
+        showAverageAid();
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+
 
     // function to show Average Aid to Households plot
     window.showAverageAid = function() {
@@ -276,6 +301,8 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave);
         };
+
+    ///////////////////////////////////////////////////////////////////////////
 
     // function to show Percent Change in After-Tax Income plot
     window.showPercentChange = function() {
