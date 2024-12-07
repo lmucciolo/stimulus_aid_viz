@@ -4,7 +4,7 @@
 
 ### By: Livia Mucciolo
 
-[Link to webpage](https://lmucciolo.github.io/stimulus_aid_interactive_viz/)
+[Link to webpage](https://lmucciolo.github.io/stimulus_aid_viz/)
 
 ## Project Description
 
