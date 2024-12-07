@@ -141,6 +141,77 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    // function to create legend
+    function createLegend(scale_hh) {
+        // Clear existing legend
+        d3.select("#legend").selectAll("*").remove();
+        let legend = d3.select("#legend")
+            .append("svg")
+            .attr("width", 300)
+            .attr("height", 100);
+
+        let circleLegend = legend.append("g")
+            .attr("transform", "translate(0, 5)");
+    
+        circleLegend.append("text")
+            .attr("x", 0)
+            .attr("y", 25)
+            .text("20,000 Households")
+            .style("font-size", "13px");
+    
+        circleLegend.append("circle")
+            .attr("cx", 170)
+            .attr("cy", 20)
+            .attr("r", function() {
+                if (scale_hh === scale_hh_s) {
+                    return scale_hh(4000);
+                }
+                return scale_hh(1000);
+            })
+            .style("fill", "#d5d5d5")
+            .style("stroke", "#3273dc")
+            .style("stroke-width", 0.9);
+
+        circleLegend.append("text")
+            .attr("x", 0)
+            .attr("y", 45)
+            .text("200,000 Households")
+            .style("font-size", "13px");
+
+        circleLegend.append("circle")
+            .attr("cx", 170)
+            .attr("cy", 42)
+            .attr("r", function() {
+                if (scale_hh === scale_hh_s) {
+                    return scale_hh(6000);
+                }
+                return scale_hh(1800);
+            })
+            .style("fill", "#d5d5d5")
+            .style("stroke", "#3273dc")
+            .style("stroke-width", 0.9);
+
+        circleLegend.append("text")
+            .attr("x", 0)
+            .attr("y", 75)
+            .text("2 Million Households")
+            .style("font-size", "13px");
+
+        circleLegend.append("circle")
+            .attr("cx", 170)
+            .attr("cy", 70)
+            .attr("r", function() {
+                if (scale_hh === scale_hh_s) {
+                    return scale_hh(10000);
+                }
+                return scale_hh(4800);
+            })
+            .style("fill", "#d5d5d5")
+            .style("stroke", "#3273dc")
+            .style("stroke-width", 0.9);
+        }
+
+    ///////////////////////////////////////////////////////////////////////////
 
     // function to show Average Aid to Households plot
     window.showAverageAid = function() {
@@ -301,6 +372,10 @@ let data = d3.csv("tpc_estimates.csv").then(function(data) {
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave);
+
+        // create legend
+        createLegend(scale_hh);
+
         };
 
     ///////////////////////////////////////////////////////////////////////////

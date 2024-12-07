@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
-    <link rel="stylesheet" href="custom_draft.css">
+    <link rel="stylesheet" href="custom.css">
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   </head>
   <body>
@@ -96,11 +96,15 @@
             How Will I Fare Compared to Other Households?
         </h1>
         <p class="block">
-            Your household group is highlighted in the figure below. 
-            Toggle over other groups to see their average aid or change in 
+            Your household group is highlighted in blue in the figure below. 
+            Toggle over other circles to see other households' average aid or change in 
             after-tax income from the stimulus bill. Circles are proportional to
-            the number of households in each income group.
+            the number of households in each income group in the United States.
+            You can also change the filing status of the plot to see how your 
+            household would fare under different a different filing status.
+
         </p>
+        <div id="legend"></div>
         <div class="field is-grouped">
             <div id="plotButton">
                 <button class="button is-light" onclick="showAverageAid()">Average Aid to Households</button>
