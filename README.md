@@ -16,7 +16,7 @@ input three variables: annual household income, filing status, and number of
 children (or dependents) and get results of their estimated average aid amount
 and percent change in after-tax income. The results are shown numerically 
 and visually in a figure where the reader can compare their results with other
-household groups. This project is a reimagination of a New York Times 
+household groups. This project is a reimagination of a New York Times UpShot
 [article](https://www.nytimes.com/2021/03/12/upshot/stimulus-bill-money-families.html)
 featuring the same data. Overall the goal was to reinterpret the visualizations 
 in the NYT article, as well as add an interactive component. While the ARP was 
