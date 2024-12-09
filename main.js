@@ -8,20 +8,10 @@ const scale_hh_M = d3.scaleLinear([379, 11200], [3, 35]);
 let highlightCircle;
 let maritalStatus;
 
-// embed data for static version
 // load csv data
 let data = d3.csv("tpc_estimates.csv").then(function (data) {
   console.log(data);
 
-  // change income group '500k+' to '500k'
-  data.forEach(function (d) {
-    if (d.income_group === "500k+") {
-      d.income_group = "500k";
-    }
-    if (d.income_group === "<30k") {
-      d.income_group = "lt30k";
-    }
-  });
   // create circleID for each circle
   data.forEach(function (d) {
     d.cirlceID = d.filing_status + "-" + d.income_group + "-" + d.children;
@@ -401,6 +391,16 @@ let data = d3.csv("tpc_estimates.csv").then(function (data) {
 
     // create legend
     createLegend(scale_hh);
+
+    // change 500k+ to 500k and <30k to lt30k
+    filteredData.forEach(function (d) {
+      if (d.income_group === "500k+") {
+        d.income_group = "500k";
+      }
+      if (d.income_group === "<30k") {
+        d.income_group = "lt30k";
+      }
+    });
   };
 
   ///////////////////////////////////////////////////////////////////////////
@@ -600,6 +600,16 @@ let data = d3.csv("tpc_estimates.csv").then(function (data) {
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
+
+    // change 500k+ to 500k and <30k to lt30k
+    filteredData.forEach(function (d) {
+      if (d.income_group === "500k+") {
+        d.income_group = "500k";
+      }
+      if (d.income_group === "<30k") {
+        d.income_group = "lt30k";
+      }
+    });
   };
 
   // show default plot
